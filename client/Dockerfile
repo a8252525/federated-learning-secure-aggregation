@@ -2,11 +2,14 @@ FROM python:3.6
 
 WORKDIR /client
 
-ADD requirements.txt .
-RUN pip install -r requirements.txt
+COPY ./requirements.txt /requirements.txt
 
-ADD app .
+# ADD requirements.txt .
+RUN pip install -r /requirements.txt
+
+# ADD app .
+COPY ./app /app
 
 ENTRYPOINT ["python"]
 
-CMD ["client.py"]
+CMD ["/app/client.py"]

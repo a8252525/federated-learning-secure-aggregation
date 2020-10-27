@@ -59,7 +59,7 @@ class ModelTf():
     def trainModel(self, nb_of_parts=1, index=0):
         x_train_part, y_train_part = self.getTrainingData(nb_of_parts, index)
         res = self.model.fit(x_train_part, y_train_part, epochs=5, verbose=0)
-        return res.history['acc'][-1]
+        return res.history['accuracy'][-1]
     
     def getTrainableVars(self):
         return self.model.trainable_variables
@@ -139,10 +139,10 @@ class ModelTf():
     # load the dataset, returns train and test X and y elements
     def load_dataset(self, prefix=''):
         # load all train
-        trainX, trainy = self.load_dataset_group('train', prefix + 'app/Motion2/')
+        trainX, trainy = self.load_dataset_group('train', prefix + '/app/Motion2/')
         #print(trainX.shape, trainy.shape)
         # load all test
-        testX, testy = self.load_dataset_group('test', prefix + 'app/Motion2/')
+        testX, testy = self.load_dataset_group('test', prefix + '/app/Motion2/')
         #print(testX.shape, testy.shape)
         # zero-offset class values
         trainy = trainy - 1
@@ -155,9 +155,9 @@ class ModelTf():
 
     def load_dataset_walk(self, prefix=''):
         # load all train
-        trainX, trainy = self.load_dataset_group('train', prefix + 'app/Motion2/')
+        trainX, trainy = self.load_dataset_group('train', prefix + '/app/Motion2/')
         # load all test
-        testX, testy = self.load_dataset_group('test', prefix + 'app/Motion2/')
+        testX, testy = self.load_dataset_group('test', prefix + '/app/Motion2/')
 
         # zero-offset class values
         trainy = trainy - 1
