@@ -3,6 +3,6 @@ services:
     client:
         ports:
             - 5000-5500:5000
-        image: secure_aggregation/client:latest
+        image: secure_aggregation/client:no_train
         environment:
             - SERVER_IP=http://140.113.164.36:3000
