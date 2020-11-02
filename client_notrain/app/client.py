@@ -26,7 +26,7 @@ from modelTf import ModelTf
 MODEL = ModelTf()
 
 # CONST
-SERVER_IP = os.environ['SERVER_IP']#'http://140.113.164.36:3000' #'http://localhost:3000' # os.environ['SERVER_IP'] or 
+SERVER_IP = os.environ['SERVER_IP'] #'http://localhost:3000' # os.environ['SERVER_IP'] or 
 PULL_REQUEST_INTERVAL = 1 # in second(s)
 HEADERS = { 'Content-type': 'application/json' }
 BYTES_NUMBER = 4

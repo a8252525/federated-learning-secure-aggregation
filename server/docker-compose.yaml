@@ -1,6 +1,7 @@
 version: '3'
 services:
   web:
+    image: secure_aggregation/server:thres251 #comment this if you dod not build you own docker image
     build: .
     restart: always
     ports:

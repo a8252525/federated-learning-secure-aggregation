@@ -30,8 +30,8 @@ MODEL = ModelTf()
 
 # CONST
 
-TIMEOUT_SECONDS = 2
-THRESHOLD = 21
+TIMEOUT_SECONDS = 5
+THRESHOLD = 251
 CLIENT_SECRET_SIZE = len(MODEL.toNumpyFlatArray())
 BYTES_NUMBER = 4
 # 1: Training on server

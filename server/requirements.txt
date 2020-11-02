@@ -3,7 +3,7 @@ tensorflow
 cryptography
 SQLAlchemy
 psycopg2
-numpy
+numpy==1.16.0
 sslib
 pandas
 keras
