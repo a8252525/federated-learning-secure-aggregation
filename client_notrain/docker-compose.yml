@@ -5,4 +5,4 @@ services:
             - 5000-5500:5000
         image: secure_aggregation/client:no_train
         environment:
-            - SERVER_IP=http://140.113.164.151:3000
+            - SERVER_IP=http://140.113.164.36:3000
