@@ -30,7 +30,7 @@ MODEL = ModelTf()
 
 # CONST
 
-TIMEOUT_SECONDS = 5
+TIMEOUT_SECONDS = 100
 THRESHOLD = 251
 CLIENT_SECRET_SIZE = len(MODEL.toNumpyFlatArray())
 BYTES_NUMBER = 4
@@ -41,7 +41,7 @@ MODE=3
 
 app = Flask(__name__)
 
-mysql_engine = create_engine('postgresql://postgres:root@db/federated') # , echo=True)
+mysql_engine = create_engine('postgresql://postgres:root@db/federated', pool_size = 500, pool_recycle=3600) # , echo=True)
 models.models.Base.metadata.create_all(mysql_engine)
 session_factory = sessionmaker(bind=mysql_engine)
 Session = scoped_session(session_factory)
