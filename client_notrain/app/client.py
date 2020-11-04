@@ -55,7 +55,7 @@ if MODE == 1:
     exit(0) 
 
 # Get current model
-res = rq.get(SERVER_IP+'/model')
+res = rq.get(SERVER_IP+'/model', timeout=300)
 r = base64.b64decode(res.text)
 initialTrainableVars = np.frombuffer(r, dtype=np.dtype('d'))
 MODEL.updateFromNumpyFlatArray(initialTrainableVars)
@@ -81,12 +81,12 @@ if MODE == 2:
 ############## MODEINIT ##############
 
 # Get current try
-res = rq.get(SERVER_IP+'/tries/current')
+res = rq.get(SERVER_IP+'/tries/current', timeout=300)
 initialParams = res.json()
 idTry = str(initialParams['idTry'])
 
 # Get initial params
-res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params')
+res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params', timeout=300)
 initialParams = res.json()
 threshold = initialParams['threshold']
 idUser = initialParams['idUser']
@@ -129,10 +129,10 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/0/public-keys?userId='+str(idUs
 
 # Get U1 the list with public keys from all clients
 url = SERVER_IP+'/tries/'+idTry+'/rounds/1/public-keys'
-res = rq.get(url)
+res = rq.get(url, timeout=300)
 
 while res.status_code != 200:
-    res = rq.get(url)
+    res = rq.get(url, timeout=300)
     time.sleep(PULL_REQUEST_INTERVAL)
 
 clientsU1 = res.json()
@@ -203,14 +203,14 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/1/ciphertexts?userId='+str(idUs
 
 # Get U2 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/2/ciphertexts?userId=' + str(idUser)
-res = rq.get(url)
+res = rq.get(url, timeout=300)
 
 if randrange(0,100) >= 90:
     print('Client ' + str(idUser) + ': internet connection lost. EXIT.')
     exit(0)
 
 while res.status_code != 200:
-    res = rq.get(url)
+    res = rq.get(url, timeout=300)
     time.sleep(PULL_REQUEST_INTERVAL)
 
 clientsU2 = res.json()
@@ -289,10 +289,10 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/2/masked-vector?userId='+str(id
 
 # Get U4 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/4/user-list'
-res = rq.get(url)
+res = rq.get(url, timeout=300)
 
 while res.status_code != 200:
-    res = rq.get(url)
+    res = rq.get(url, timeout=300)
     time.sleep(PULL_REQUEST_INTERVAL)
 
 clientsU4 = res.json()
