@@ -27,7 +27,7 @@ MODEL = ModelTf()
 
 # CONST
 SERVER_IP = os.environ['SERVER_IP'] #'http://localhost:3000' # os.environ['SERVER_IP'] or 
-PULL_REQUEST_INTERVAL = 1 # in second(s)
+PULL_REQUEST_INTERVAL = os.environ['PULL_REQUEST_INTERVAL'] # in second(s)
 HEADERS = { 'Content-type': 'application/json' }
 BYTES_NUMBER = 4
 # 1: Training on server
