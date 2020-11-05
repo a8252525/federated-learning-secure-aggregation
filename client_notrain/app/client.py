@@ -135,7 +135,7 @@ while res.status_code != 200:
     try:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
-    except requests.exceptions.Timeout:
+    except rq.exceptions.Timeout:
         print("Request timeout but retry. Don't worry")
         pass
     except:
@@ -220,7 +220,7 @@ while res.status_code != 200:
     try:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
-    except requests.exceptions.Timeout:
+    except rq.exceptions.Timeout:
         print("Request timeout but retry. Don't worry")
         pass
     except:
@@ -309,7 +309,7 @@ while res.status_code != 200:
     try:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
-    except requests.exceptions.Timeout:
+    except rq.exceptions.Timeout:
         print("Request timeout but retry. Don't worry")
         pass
     except:
