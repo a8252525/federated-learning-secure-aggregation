@@ -132,8 +132,15 @@ url = SERVER_IP+'/tries/'+idTry+'/rounds/1/public-keys'
 res = rq.get(url, timeout=300)
 
 while res.status_code != 200:
-    res = rq.get(url, timeout=300)
-    time.sleep(PULL_REQUEST_INTERVAL)
+    try:
+        res = rq.get(url, timeout=300)
+        time.sleep(PULL_REQUEST_INTERVAL)
+    except requests.exceptions.Timeout:
+        print("Request timeout but retry. Don't worry")
+        pass
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
 
 clientsU1 = res.json()
 
@@ -210,8 +217,15 @@ if randrange(0,100) >= 90:
     exit(0)
 
 while res.status_code != 200:
-    res = rq.get(url, timeout=300)
-    time.sleep(PULL_REQUEST_INTERVAL)
+    try:
+        res = rq.get(url, timeout=300)
+        time.sleep(PULL_REQUEST_INTERVAL)
+    except requests.exceptions.Timeout:
+        print("Request timeout but retry. Don't worry")
+        pass
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
 
 clientsU2 = res.json()
 
@@ -292,8 +306,15 @@ url = SERVER_IP + '/tries/' + idTry + '/rounds/4/user-list'
 res = rq.get(url, timeout=300)
 
 while res.status_code != 200:
-    res = rq.get(url, timeout=300)
-    time.sleep(PULL_REQUEST_INTERVAL)
+    try:
+        res = rq.get(url, timeout=300)
+        time.sleep(PULL_REQUEST_INTERVAL)
+    except requests.exceptions.Timeout:
+        print("Request timeout but retry. Don't worry")
+        pass
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        raise
 
 clientsU4 = res.json()
 

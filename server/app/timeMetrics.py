@@ -54,3 +54,5 @@ class timeMetrics:
                     writer2.writerow(self.times)
         except IOError:
             print("I/O error")
+    def compute_server_running_time(self):
+        return self.times['End']-self.times['Start']
