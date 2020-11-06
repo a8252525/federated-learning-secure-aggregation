@@ -380,6 +380,10 @@ def postShares(idTry):
     session = Session()
 
     userId = request.args.get('userId')
+    try:
+        userId.raise_for_status()
+    except requests.exceptions.HTTPError:
+        return 'HTTPError. Client may close before connection', 500
 
     currentClient = session.query(models.models.Client).get(int(userId))
     currentTry = session.query(models.models.TryEntity)\

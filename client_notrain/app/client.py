@@ -144,12 +144,11 @@ while res.status_code != 200:
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
         continue
-    except urllib3.exceptions.NewConnectionError:
-        print("Failed to establish a new connection: [Errno 110] Connection timed out")
-        print("Retry")
-        continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
+        continue
+    except urllib3.exceptions.MaxRetryError:
+        print("python urllib3 MaxRetryError. Retry.")
         continue
     except Exception as e:
         print("Unexpected error:", e)
@@ -241,6 +240,9 @@ while res.status_code != 200:
         continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
+        continue
+    except urllib3.exceptions.MaxRetryError:
+        print("python urllib3 MaxRetryError. Retry.")
         continue
     except Exception as e:
         print("Unexpected error:", e)
@@ -336,6 +338,9 @@ while res.status_code != 200:
         continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
+        continue
+    except urllib3.exceptions.MaxRetryError:
+        print("python urllib3 MaxRetryError. Retry.")
         continue
     except Exception as e:
         print("Unexpected error:", e)
