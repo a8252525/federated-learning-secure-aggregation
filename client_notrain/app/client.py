@@ -9,6 +9,7 @@ import secrets
 import time
 import base64
 import sys
+import urllib3
 
 from random import randrange
 from cryptography.fernet import Fernet
@@ -56,7 +57,7 @@ if MODE == 1:
     exit(0) 
 
 # Get current model
-res = rq.get(SERVER_IP+'/model', timeout=300)
+res = rq.get(SERVER_IP+'/model', timeout=None)
 r = base64.b64decode(res.text)
 initialTrainableVars = np.frombuffer(r, dtype=np.dtype('d'))
 MODEL.updateFromNumpyFlatArray(initialTrainableVars)
@@ -82,12 +83,12 @@ if MODE == 2:
 ############## MODEINIT ##############
 
 # Get current try
-res = rq.get(SERVER_IP+'/tries/current', timeout=300)
+res = rq.get(SERVER_IP+'/tries/current', timeout=None)
 initialParams = res.json()
 idTry = str(initialParams['idTry'])
 
 # Get initial params
-res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params', timeout=300)
+res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params', timeout=None)
 initialParams = res.json()
 threshold = initialParams['threshold']
 idUser = initialParams['idUser']
@@ -130,11 +131,11 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/0/public-keys?userId='+str(idUs
 
 # Get U1 the list with public keys from all clients
 url = SERVER_IP+'/tries/'+idTry+'/rounds/1/public-keys'
-res = rq.get(url, timeout=300)
+res = rq.get(url, timeout=None)
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=300)
+        res = rq.get(url, timeout=None)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
@@ -142,12 +143,16 @@ while res.status_code != 200:
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
         pass
+    except urllib3.exceptions.NewConnectionError:
+        print("Failed to establish a new connection: [Errno 110] Connection timed out")
+        print("Retry")
+        pass
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
         pass
     except Exception as e:
         print("Unexpected error:", e)
-        raise
+        pass
 
 clientsU1 = res.json()
 
@@ -217,7 +222,7 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/1/ciphertexts?userId='+str(idUs
 
 # Get U2 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/2/ciphertexts?userId=' + str(idUser)
-res = rq.get(url, timeout=300)
+res = rq.get(url, timeout=None)
 
 if randrange(0,100) >= 90:
     print('Client ' + str(idUser) + ': internet connection lost. EXIT.')
@@ -225,7 +230,7 @@ if randrange(0,100) >= 90:
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=300)
+        res = rq.get(url, timeout=None)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
@@ -316,11 +321,11 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/2/masked-vector?userId='+str(id
 
 # Get U4 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/4/user-list'
-res = rq.get(url, timeout=300)
+res = rq.get(url, timeout=None)
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=300)
+        res = rq.get(url, timeout=None)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
