@@ -142,8 +142,11 @@ while res.status_code != 200:
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
         pass
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
+    except TimeoutError:
+        print("python urllib3 buildin timeout exception. Retry.")
+        pass
+    except Exception as e:
+        print("Unexpected error:", e)
         raise
 
 clientsU1 = res.json()
@@ -230,8 +233,11 @@ while res.status_code != 200:
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
         pass
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
+    except TimeoutError:
+        print("python urllib3 buildin timeout exception. Retry.")
+        pass
+    except Exception as e:
+        print("Unexpected error:", e)
         raise
 
 clientsU2 = res.json()
@@ -322,8 +328,11 @@ while res.status_code != 200:
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
         pass
-    except:
-        print("Unexpected error:", sys.exc_info()[0])
+    except TimeoutError:
+        print("python urllib3 buildin timeout exception. Retry.")
+        pass
+    except Exception as e:
+        print("Unexpected error:", e)
         raise
 
 clientsU4 = res.json()
