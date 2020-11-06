@@ -24,7 +24,7 @@ import atexit
 import base64
 import datetime
 import pickle
-
+from werkzeug.exceptions import InternalServerError
 # Build simple model
 MODEL = ModelTf()
 
@@ -380,10 +380,6 @@ def postShares(idTry):
     session = Session()
 
     userId = request.args.get('userId')
-    try:
-        userId.raise_for_status()
-    except requests.exceptions.HTTPError:
-        return 'HTTPError. Client may close before connection', 500
 
     currentClient = session.query(models.models.Client).get(int(userId))
     currentTry = session.query(models.models.TryEntity)\
@@ -438,7 +434,7 @@ def postShares(idTry):
         if client.giveShares:
             readyClients.append(client)
     
-    if len(readyClients) >= currentTry.threshold and not RECOVERD_FLAG:
+    if len(readyClients) >= currentTry.threshold:
         # COMPUTE GLOBAL SUM
         globalSum = np.zeros(CLIENT_SECRET_SIZE, dtype=np.dtype('d'))
         
@@ -659,6 +655,18 @@ def exit_handler():
     session.commit()
 
 atexit.register(exit_handler)
+
+@app.errorhandler(InternalServerError)
+def handle_500(e):
+    original = getattr(e, "original_exception", None)
+
+    if original is None:
+        # direct 500 error, such as abort(500)
+        return "object is none", 500
+
+    # wrapped unhandled error
+    return "unhandled error", 500
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=3000)
