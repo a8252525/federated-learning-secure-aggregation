@@ -137,7 +137,10 @@ while res.status_code != 200:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
-        print("Request timeout but retry. Don't worry")
+        print("Request timeout but retry.")
+        pass
+    except rq.exceptions.ConnectionError:
+        print("Fail to establish new connection but retry.")
         pass
     except:
         print("Unexpected error:", sys.exc_info()[0])
@@ -222,7 +225,10 @@ while res.status_code != 200:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
-        print("Request timeout but retry. Don't worry")
+        print("Request timeout but retry.")
+        pass
+    except rq.exceptions.ConnectionError:
+        print("Fail to establish new connection but retry.")
         pass
     except:
         print("Unexpected error:", sys.exc_info()[0])
@@ -311,7 +317,10 @@ while res.status_code != 200:
         res = rq.get(url, timeout=300)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
-        print("Request timeout but retry. Don't worry")
+        print("Request timeout but retry.")
+        pass
+    except rq.exceptions.ConnectionError:
+        print("Fail to establish new connection but retry.")
         pass
     except:
         print("Unexpected error:", sys.exc_info()[0])

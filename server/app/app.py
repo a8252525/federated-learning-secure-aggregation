@@ -30,10 +30,13 @@ MODEL = ModelTf()
 
 # CONST
 
-TIMEOUT_SECONDS = 100
-THRESHOLD = 251
+CLIENT_NUMBER = 340
+TIMEOUT_SECONDS = 120
 CLIENT_SECRET_SIZE = len(MODEL.toNumpyFlatArray())
 BYTES_NUMBER = 4
+Server = "Honest but curious" #"Malicious"
+THRESHOLD = int(CLIENT_NUMBER/2) + 1 if Server== "Honest but curious" else int(CLIENT_NUMBER*2/3)+1
+RECOVERD_FLAG = False
 # 1: Training on server
 # 2: Training on device + non-secure agregation
 # 3: Training on device + secure agregation
@@ -431,7 +434,7 @@ def postShares(idTry):
         if client.giveShares:
             readyClients.append(client)
     
-    if len(readyClients) >= currentTry.threshold:
+    if len(readyClients) >= currentTry.threshold and not RECOVERD_FLAG:
         # COMPUTE GLOBAL SUM
         globalSum = np.zeros(CLIENT_SECRET_SIZE, dtype=np.dtype('d'))
         
@@ -509,7 +512,9 @@ def postShares(idTry):
 
         #timer end
         Metrics.addTime("End")
+        app.logger.info('Server running time: '+ str(Metrics.compute_server_running_time()))
         Metrics.to_csv()
+        RECOVERD_FLAG = True
         
         # Finish current try
         currentTry.currentRound = -1
