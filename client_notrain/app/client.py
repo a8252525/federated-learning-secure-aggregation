@@ -32,6 +32,7 @@ SERVER_IP = os.environ['SERVER_IP'] #'http://localhost:3000' # os.environ['SERVE
 PULL_REQUEST_INTERVAL = int(os.environ['PULL_REQUEST_INTERVAL']) # in second(s)
 HEADERS = { 'Content-type': 'application/json' , 'Connection': 'close'}
 BYTES_NUMBER = 4
+
 # 1: Training on server
 # 2: Training on device + non-secure agregation
 # 3: Training on device + secure agregation
@@ -57,7 +58,7 @@ if MODE == 1:
     exit(0) 
 
 # Get current model
-res = rq.get(SERVER_IP+'/model', timeout=None)
+res = rq.get(SERVER_IP+'/model')
 r = base64.b64decode(res.text)
 initialTrainableVars = np.frombuffer(r, dtype=np.dtype('d'))
 MODEL.updateFromNumpyFlatArray(initialTrainableVars)
@@ -83,12 +84,12 @@ if MODE == 2:
 ############## MODEINIT ##############
 
 # Get current try
-res = rq.get(SERVER_IP+'/tries/current', timeout=None)
+res = rq.get(SERVER_IP+'/tries/current')
 initialParams = res.json()
 idTry = str(initialParams['idTry'])
 
 # Get initial params
-res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params', timeout=None)
+res = rq.get(SERVER_IP+'/tries/'+idTry+'/initial-params')
 initialParams = res.json()
 threshold = initialParams['threshold']
 idUser = initialParams['idUser']
@@ -131,28 +132,28 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/0/public-keys?userId='+str(idUs
 
 # Get U1 the list with public keys from all clients
 url = SERVER_IP+'/tries/'+idTry+'/rounds/1/public-keys'
-res = rq.get(url, timeout=None)
+res = rq.get(url)
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=None)
+        res = rq.get(url)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
-        pass
+        continue
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
-        pass
+        continue
     except urllib3.exceptions.NewConnectionError:
         print("Failed to establish a new connection: [Errno 110] Connection timed out")
         print("Retry")
-        pass
+        continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
-        pass
+        continue
     except Exception as e:
         print("Unexpected error:", e)
-        pass
+        continue
 
 clientsU1 = res.json()
 
@@ -222,7 +223,7 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/1/ciphertexts?userId='+str(idUs
 
 # Get U2 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/2/ciphertexts?userId=' + str(idUser)
-res = rq.get(url, timeout=None)
+res = rq.get(url)
 
 if randrange(0,100) >= 90:
     print('Client ' + str(idUser) + ': internet connection lost. EXIT.')
@@ -230,20 +231,20 @@ if randrange(0,100) >= 90:
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=None)
+        res = rq.get(url)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
-        pass
+        continue
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
-        pass
+        continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
-        pass
+        continue
     except Exception as e:
         print("Unexpected error:", e)
-        raise
+        continue
 
 clientsU2 = res.json()
 
@@ -321,24 +322,24 @@ res = rq.post(SERVER_IP+'/tries/'+idTry+'/rounds/2/masked-vector?userId='+str(id
 
 # Get U4 the list of ciphertexts from all clients
 url = SERVER_IP + '/tries/' + idTry + '/rounds/4/user-list'
-res = rq.get(url, timeout=None)
+res = rq.get(url)
 
 while res.status_code != 200:
     try:
-        res = rq.get(url, timeout=None)
+        res = rq.get(url)
         time.sleep(PULL_REQUEST_INTERVAL)
     except rq.exceptions.Timeout:
         print("Request timeout but retry.")
-        pass
+        continue
     except rq.exceptions.ConnectionError:
         print("Fail to establish new connection but retry.")
-        pass
+        continue
     except TimeoutError:
         print("python urllib3 buildin timeout exception. Retry.")
-        pass
+        continue
     except Exception as e:
         print("Unexpected error:", e)
-        raise
+        continue
 
 clientsU4 = res.json()
 
