@@ -6,4 +6,4 @@ services:
         image: secure_aggregation/client:no_train
         environment:
             - SERVER_IP=http://140.113.164.36:3000
-            - PULL_REQUEST_INTERVAL=120
+            - PULL_REQUEST_INTERVAL=180
